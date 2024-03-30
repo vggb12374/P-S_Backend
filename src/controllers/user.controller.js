@@ -1,3 +1,4 @@
+import { logger } from '../handlers/logger.js';
 import { UserService } from '../services/user.service.js';
 const userService = new UserService();
 import { CryptoService } from '../services/crypto.service.js';
@@ -5,6 +6,10 @@ const cryptoService = new CryptoService();
 import { generateAccessToken } from '../services/token.service.js';
 
 export class UserController {
+    constructor() {
+        this.register = logger(this.register.bind(this));
+    }
+
     async register(req, res) {
         try {
             const { login, password } = req.body;
