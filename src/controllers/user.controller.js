@@ -6,9 +6,10 @@ const cryptoService = new CryptoService();
 import { generateAccessToken } from '../services/token.service.js';
 
 export class UserController {
-    constructor() {
-        this.register = logger(this.register.bind(this));
-    }
+    // TODO
+    // constructor() {
+    //     this.register = logger(this.register.bind(this));
+    // }
 
     async register(req, res) {
         try {

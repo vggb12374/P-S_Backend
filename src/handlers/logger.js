@@ -10,7 +10,7 @@ const writeLogData = (data) => {
 }
 
 const writeErrorData = (data) => {
-    console.error(errorMsg);
+    console.error(data);
     fs.writeFileSync(resolve("src/logs"), data);
 }
 
