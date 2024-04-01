@@ -6,12 +6,12 @@ import { resolve } from "path";
 
 const writeLogData = (data) => {
     console.log(data);
-    fs.writeFileSync(resolve("src/logs"), data);
+    fs.appendFileSync(resolve("src/logs"), data + "\n");
 }
 
 const writeErrorData = (data) => {
     console.error(data);
-    fs.writeFileSync(resolve("src/logs"), data);
+    fs.appendFileSync(resolve("src/logs"), data);
 }
 
 /**
@@ -22,12 +22,12 @@ const writeErrorData = (data) => {
  * @returns 
  */
 export const logger = (originalMethod) => {
-    originalMethod = async function (req, res, next) {
+    return async function (req, res, next) {
         try {
             const before = `[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`;
             writeLogData(before);
 
-            const result = await originalMethod.call(this, req, res, next);
+            const result = await originalMethod(req, res, next);
 
             const after = `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ${res.statusCode}`;
             writeLogData(after);
@@ -39,6 +39,4 @@ export const logger = (originalMethod) => {
             return sendResponse(res, StatusCodes.INTERNAL_SERVER_ERROR);
         }
     };
-
-    return originalMethod;
 }
