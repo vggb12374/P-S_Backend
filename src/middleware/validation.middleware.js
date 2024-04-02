@@ -1,5 +1,5 @@
-import { ValidationService } from "../services/validation.service.js";
-const validationService = new ValidationService();
+import { validationServiceFactory } from "../services/validation.service.js";
+const validationService = validationServiceFactory();
 
 export class ValidationMiddleware {
     regLogValidationMW(req, res, next) {

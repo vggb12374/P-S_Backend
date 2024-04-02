@@ -9,7 +9,7 @@ const validationMW = new ValidationMiddleware();
 router.post('/register', validationMW.regLogValidationMW, userController.register);
 router.post('/login', validationMW.regLogValidationMW, userController.login);
 router.get('/user/:id', authMiddleware, userController.getUserById);
-router.put('/user/:id', [validationMW.updateValidationMW, authMiddleware], userController.update);
+router.put('/user/:id', [authMiddleware, validationMW.updateValidationMW], userController.update);
 router.delete('/user/:id', authMiddleware, userController.delete);
 
 export { router };

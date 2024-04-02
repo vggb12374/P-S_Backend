@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 const secret = process.env.SECRET;
 
-export function generateAccessToken(login) {
+export function generateAccessToken(id) {
     const payload = {
-        login
+        id
     };
     return jwt.sign(payload, secret, {expiresIn: "24h"});
 }

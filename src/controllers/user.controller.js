@@ -1,10 +1,11 @@
 import { logger } from '../handlers/logger.js';
-import { UserService } from '../services/user.service.js';
-const userService = new UserService();
-import { CryptoService } from '../services/crypto.service.js';
-const cryptoService = new CryptoService();
+import { userServiceFactory } from '../services/user.service.js';
+const userService = userServiceFactory();
+import { cryptoServiceFactory } from '../services/crypto.service.js';
+const cryptoService = cryptoServiceFactory();
 import { generateAccessToken } from '../services/token.service.js';
 import { StatusCodes } from 'http-status-codes';
+import e from 'express';
 
 export class UserController {
     constructor() {
@@ -24,7 +25,8 @@ export class UserController {
 
     async login(req, res) {
         const { login, password } = req.body;
-        if (!await userService.getUserByLogin(login)) {
+        const user = await userService.getUserByLogin(login);
+        if (!user) {
             return res.status(StatusCodes.BAD_REQUEST).json("User " + login + " does not exist!");
         }
         const hashedPassword = await userService.getPassByLogin(login);
@@ -32,7 +34,7 @@ export class UserController {
         if (!validatedPassword) {
             return res.status(StatusCodes.BAD_REQUEST).json("Wrong password!");
         }
-        const token = generateAccessToken(login);
+        const token = generateAccessToken(user.id);
         return res.json({token});
     }
 
@@ -64,6 +66,7 @@ export class UserController {
             await userService.updateUser(req.params.id, login, hashedPassword);
             return res.json('Change info successfull');
         } catch (error) {
+            console.log(error);
             res.status(500).json(error);
         }      
     }

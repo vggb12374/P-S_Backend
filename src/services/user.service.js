@@ -1,13 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export class UserService {
+class UserService {
     async getUserByLogin(login) {
         const user = await prisma.users.findUnique({
             where: {
                 login: login,
             },
             select: {
+                id: true,
                 login: true,
             },
         });
@@ -42,8 +43,8 @@ export class UserService {
             },
             select: {
                 login: true,
-                created_at: true,
-                updated_at: true,
+                createdAt: true,
+                updatedAt: true,
             },
         });
         return user;
@@ -91,3 +92,7 @@ export class UserService {
         });
     }
 };
+
+export function userServiceFactory() {
+    return new UserService();
+}

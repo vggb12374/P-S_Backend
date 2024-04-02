@@ -7,10 +7,82 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
-  id         String   @id @default(uuid()) @db.Uuid
-  login      String   @unique @db.VarChar(255)
-  password   String   @db.VarChar(255)
-  created_at DateTime @default(now()) @db.Timestamp(6)
-  updated_at DateTime @default(now()) @db.Timestamp(6)
+model AvailableSquares {
+  id            String        @id @default(uuid()) @db.Uuid
+  squareId      String        @db.Uuid
+  userSessionId String        @db.Uuid
+  createdAt     DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime      @default(now()) @db.Timestamp(6)
+  Squares       Squares       @relation(fields: [squareId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk1")
+  UsersSessions UsersSessions @relation(fields: [userSessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk2")
+}
+
+model Inventories {
+  id            String        @id @default(uuid()) @db.Uuid
+  resourceId    String        @db.Uuid
+  userSessionId String        @db.Uuid
+  amount        Int
+  createdAt     DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime      @default(now()) @db.Timestamp(6)
+  Resources     Resources     @relation(fields: [resourceId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Inventories_fk1")
+  UsersSessions UsersSessions @relation(fields: [userSessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Inventories_fk2")
+}
+
+model Maps {
+  id        String     @id @default(uuid()) @db.Uuid
+  source    String
+  createdAt DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt DateTime   @default(now()) @db.Timestamp(6)
+  Sessions  Sessions[]
+}
+
+model Resources {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String        @db.VarChar(255)
+  type        Int           @db.SmallInt
+  createdAt   DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime      @default(now()) @db.Timestamp(6)
+  Inventories Inventories[]
+}
+
+model Sessions {
+  id            String          @id @default(uuid()) @db.Uuid
+  token         String          @db.VarChar(255)
+  mapId         String          @db.Uuid
+  createdAt     DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime        @default(now()) @db.Timestamp(6)
+  Maps          Maps            @relation(fields: [mapId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Sessions_fk2")
+  UsersSessions UsersSessions[]
+}
+
+model Squares {
+  id               String             @id @default(uuid()) @db.Uuid
+  x                Int
+  y                Int
+  event            Int?               @db.SmallInt
+  createdAt        DateTime           @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime           @default(now()) @db.Timestamp(6)
+  AvailableSquares AvailableSquares[]
+}
+
+model Users {
+  id            String          @id @default(uuid()) @db.Uuid
+  login         String          @unique @db.VarChar(255)
+  password      String          @db.VarChar(255)
+  createdAt     DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime        @default(now()) @db.Timestamp(6)
+  UsersSessions UsersSessions[]
+}
+
+model UsersSessions {
+  id               String             @id @default(uuid()) @db.Uuid
+  userId           String             @db.Uuid
+  sessionId        String             @db.Uuid
+  isAdmin          Boolean
+  createdAt        DateTime           @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime           @default(now()) @db.Timestamp(6)
+  AvailableSquares AvailableSquares[]
+  Inventories      Inventories[]
+  Users            Users              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "UsersSessions_fk1")
+  Sessions         Sessions           @relation(fields: [sessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "UsersSessions_fk2")
 }

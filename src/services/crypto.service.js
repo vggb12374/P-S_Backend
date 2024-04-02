@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 
-export class CryptoService {
+class CryptoService {
     hashPassword(password) {
         const hashedPassword = bcrypt.hashSync(password, 7);
         return hashedPassword;
@@ -11,3 +11,7 @@ export class CryptoService {
         return validatedPassword;
     }
 };
+
+export function cryptoServiceFactory() {
+    return new CryptoService();
+}
