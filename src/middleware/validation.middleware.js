@@ -1,21 +1,23 @@
 import { validationServiceFactory } from "../services/validation.service.js";
 const validationService = validationServiceFactory();
+import { sendResponse } from '../handlers/response.js';
+import { StatusCodes } from 'http-status-codes';
 
 export class ValidationMiddleware {
-    regLogValidationMW(req, res, next) {
+    authValidMiddleware(req, res, next) {
         const { login, password } = req.body;
-        const { error } = validationService.regLogValidation(login, password);
+        const { error } = validationService.authValidation(login, password);
         if (error) {
-            return res.status(403).json(error.message);
+            return sendResponse(res, StatusCodes.BAD_REQUEST, error.message);
         }
         next();
     }
 
-    updateValidationMW(req, res, next) {
+    updateValidMiddleware(req, res, next) {
         const { login, password } = req.body;
         const { error } = validationService.updateValidation(login, password);
         if (error) {
-            return res.status(403).json(error.message);
+            return sendResponse(res, StatusCodes.BAD_REQUEST, error.message);
         }
         next();
     }

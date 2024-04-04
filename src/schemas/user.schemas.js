@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export class UserSchemas {
-    regLogSchema = Joi.object({
+    authSchema = Joi.object({
         login: Joi.string()
         .alphanum()
         .min(4)

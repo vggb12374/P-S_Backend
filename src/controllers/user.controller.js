@@ -4,6 +4,7 @@ const userService = userServiceFactory();
 import { cryptoServiceFactory } from '../services/crypto.service.js';
 const cryptoService = cryptoServiceFactory();
 import { generateAccessToken } from '../services/token.service.js';
+import { sendResponse } from '../handlers/response.js';
 import { StatusCodes } from 'http-status-codes';
 import e from 'express';
 
@@ -16,32 +17,35 @@ export class UserController {
     async register(req, res) {
         const { login, password } = req.body;
         if (await userService.getUserByLogin(login)) {
-            return res.status(StatusCodes.FORBIDDEN).json("User " + login + " already exist!");
+            return sendResponse(res, StatusCodes.FORBIDDEN, "User " + login + " already exist!");
         }
         const hashedPassword = cryptoService.hashPassword(password);
         await userService.createUser(login, hashedPassword);
-        return res.json("Registration successful");
+        return sendResponse(res, StatusCodes.OK, "Registration successful");
     }
 
     async login(req, res) {
         const { login, password } = req.body;
         const user = await userService.getUserByLogin(login);
         if (!user) {
-            return res.status(StatusCodes.BAD_REQUEST).json("User " + login + " does not exist!");
+            return sendResponse(res, StatusCodes.BAD_REQUEST, "User " + login + " does not exist!");
         }
         const hashedPassword = await userService.getPassByLogin(login);
         const validatedPassword = cryptoService.validPassword(password, hashedPassword.password);
         if (!validatedPassword) {
-            return res.status(StatusCodes.BAD_REQUEST).json("Wrong password!");
+            return sendResponse(res, StatusCodes.BAD_REQUEST, "Wrong password!");
         }
         const token = generateAccessToken(user.id);
-        return res.json({token});
+        return sendResponse(res, StatusCodes.OK, "Successfull login", token);
     }
 
-    async getUserById(req, res) {
+    async getUserInfo(req, res) {
         try {
+            if (req.user.id !== req.params.id) {
+                return sendResponse(res, StatusCodes.BAD_REQUEST, "Nice try!");
+            }
             const user = await userService.getUserById(req.params.id);
-            res.json(user);
+            return sendResponse(res, StatusCodes.OK, "", user);
         } catch (error) {
             res.status(500).json(error);
         }       
@@ -49,32 +53,37 @@ export class UserController {
 
     async update(req, res) {
         try {
+            if (req.user.id !== req.params.id) {
+                return sendResponse(res, StatusCodes.BAD_REQUEST, "Nice try!");
+            }
             const { login, password } = req.body;
             if (!login) {
                 const hashedPassword = cryptoService.hashPassword(password);
                 await userService.updateUserPass(req.params.id, hashedPassword);
-                return res.json('Change info successfull');
+                return sendResponse(res, StatusCodes.OK, "Change info successfull");
             }
             if (await userService.getUserByLogin(login)) {
                 return res.status(StatusCodes.FORBIDDEN).json("User " + login + " already exist!");
             }
             if (!password) {
                 await userService.updateUserLogin(req.params.id, login);
-                return res.json('Change info successfull');
+                return sendResponse(res, StatusCodes.OK, "Change info successfull");
             }
             const hashedPassword = cryptoService.hashPassword(password);
             await userService.updateUser(req.params.id, login, hashedPassword);
-            return res.json('Change info successfull');
+            return sendResponse(res, StatusCodes.OK, "Change info successfull");
         } catch (error) {
-            console.log(error);
             res.status(500).json(error);
         }      
     }
 
     async delete(req, res) {
         try {
+            if (req.user.id !== req.params.id) {
+                return sendResponse(res, StatusCodes.BAD_REQUEST, "Nice try!");
+            }
             await userService.deleteUser(req.params.id);
-            return res.json('Delete user successfull');
+            return sendResponse(res, StatusCodes.OK, "Delete user successfull");
         } catch (error) {
             res.status(500).json(error);
         }
