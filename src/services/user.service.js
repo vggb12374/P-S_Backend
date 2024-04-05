@@ -2,14 +2,15 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class UserService {
-    async getUserByLogin(login) {
+    async getUserByLogin(login, id, selectLogin, password) {
         const user = await prisma.users.findUnique({
             where: {
                 login: login,
             },
             select: {
-                id: true,
-                login: true,
+                id: id,
+                login: selectLogin,
+                password: password,
             },
         });
         return user;
@@ -24,52 +25,19 @@ class UserService {
         });
     }
     
-    async getPassByLogin(login) {
-        const user = await prisma.users.findUnique({
-            where: {
-                login: login,
-            },
-            select: {
-                password: true,
-            },
-        });
-        return user;
-    }
-    
-    async getUserById(id) {
+    async getUserById(id, login, password, createdAt, updatedAt) {
         const user = await prisma.users.findUnique({
             where: {
                 id: id,
             },
             select: {
-                login: true,
-                createdAt: true,
-                updatedAt: true,
-            },
-        });
-        return user;
-    }
-
-    async updateUserLogin(id, login) {
-        await prisma.users.update({
-            where: {
-                id: id,
-            },
-            data: {
                 login: login,
-            },
-        });
-    }
-
-    async updateUserPass(id, password) {
-        await prisma.users.update({
-            where: {
-                id: id,
-            },
-            data: {
                 password: password,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
             },
         });
+        return user;
     }
 
     async updateUser(id, login, password) {

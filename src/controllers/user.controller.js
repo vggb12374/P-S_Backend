@@ -16,27 +16,45 @@ export class UserController {
 
     async register(req, res) {
         const { login, password } = req.body;
-        if (await userService.getUserByLogin(login)) {
+        if (await userService.getUserByLogin(login, false, true, false)) {
             return sendResponse(res, StatusCodes.FORBIDDEN, "User " + login + " already exist!");
         }
         const hashedPassword = cryptoService.hashPassword(password);
         await userService.createUser(login, hashedPassword);
         return sendResponse(res, StatusCodes.OK, "Registration successful");
+
+        // if (await userService.getUserByLogin(login)) {
+        //     return sendResponse(res, StatusCodes.FORBIDDEN, "User " + login + " already exist!");
+        // }
+        // const hashedPassword = cryptoService.hashPassword(password);
+        // await userService.createUser(login, hashedPassword);
+        // return sendResponse(res, StatusCodes.OK, "Registration successful");
     }
 
     async login(req, res) {
         const { login, password } = req.body;
-        const user = await userService.getUserByLogin(login);
+        const user = await userService.getUserByLogin(login, true, false, true);
         if (!user) {
             return sendResponse(res, StatusCodes.BAD_REQUEST, "User " + login + " does not exist!");
         }
-        const hashedPassword = await userService.getPassByLogin(login);
-        const validatedPassword = cryptoService.validPassword(password, hashedPassword.password);
+        const validatedPassword = cryptoService.validPassword(password, user.password);
         if (!validatedPassword) {
             return sendResponse(res, StatusCodes.BAD_REQUEST, "Wrong password!");
         }
         const token = generateAccessToken(user.id);
         return sendResponse(res, StatusCodes.OK, "Successfull login", token);
+
+        // const user = await userService.getUserByLogin(login);
+        // if (!user) {
+        //     return sendResponse(res, StatusCodes.BAD_REQUEST, "User " + login + " does not exist!");
+        // }
+        // const hashedPassword = await userService.getPassByLogin(login);
+        // const validatedPassword = cryptoService.validPassword(password, hashedPassword.password);
+        // if (!validatedPassword) {
+        //     return sendResponse(res, StatusCodes.BAD_REQUEST, "Wrong password!");
+        // }
+        // const token = generateAccessToken(user.id);
+        // return sendResponse(res, StatusCodes.OK, "Successfull login", token);
     }
 
     async getUserInfo(req, res) {
@@ -44,8 +62,8 @@ export class UserController {
             if (req.user.id !== req.params.id) {
                 return sendResponse(res, StatusCodes.BAD_REQUEST, "Nice try!");
             }
-            const user = await userService.getUserById(req.params.id);
-            return sendResponse(res, StatusCodes.OK, "", user);
+            const user = await userService.getUserById(req.params.id, true, false, true, true);
+            return sendResponse(res, StatusCodes.OK, "Get user info successfull", user);
         } catch (error) {
             res.status(500).json(error);
         }       
@@ -58,20 +76,38 @@ export class UserController {
             }
             const { login, password } = req.body;
             if (!login) {
+                const user = await userService.getUserById(req.params.id, true, false, false, false);
                 const hashedPassword = cryptoService.hashPassword(password);
-                await userService.updateUserPass(req.params.id, hashedPassword);
+                await userService.updateUser(req.params.id, user.login, hashedPassword);
                 return sendResponse(res, StatusCodes.OK, "Change info successfull");
             }
-            if (await userService.getUserByLogin(login)) {
+            if (await userService.getUserByLogin(login, false, true, false)) {
                 return res.status(StatusCodes.FORBIDDEN).json("User " + login + " already exist!");
             }
             if (!password) {
-                await userService.updateUserLogin(req.params.id, login);
+                const user = await userService.getUserById(req.params.id, false, true, false, false);
+                await userService.updateUser(req.params.id, login, user.password);
                 return sendResponse(res, StatusCodes.OK, "Change info successfull");
             }
             const hashedPassword = cryptoService.hashPassword(password);
             await userService.updateUser(req.params.id, login, hashedPassword);
             return sendResponse(res, StatusCodes.OK, "Change info successfull");
+            
+            // if (!login) {
+            //     const hashedPassword = cryptoService.hashPassword(password);
+            //     await userService.updateUserPass(req.params.id, hashedPassword);
+            //     return sendResponse(res, StatusCodes.OK, "Change info successfull");
+            // }
+            // if (await userService.getUserByLogin(login)) {
+            //     return res.status(StatusCodes.FORBIDDEN).json("User " + login + " already exist!");
+            // }
+            // if (!password) {
+            //     await userService.updateUserLogin(req.params.id, login);
+            //     return sendResponse(res, StatusCodes.OK, "Change info successfull");
+            // }
+            // const hashedPassword = cryptoService.hashPassword(password);
+            // await userService.updateUser(req.params.id, login, hashedPassword);
+            // return sendResponse(res, StatusCodes.OK, "Change info successfull");
         } catch (error) {
             res.status(500).json(error);
         }      
