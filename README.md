@@ -5,8 +5,9 @@
 2. configure .env file by .env.example
 3. run < npx prisma migrate deploy >
 4. run < npx prisma generate >
-5. run < npm start > for production
-6. run < npm run dev > for development
+5. run < npx prisma db seed >
+6. run < npm start > for production
+7. run < npm run dev > for development
 
 ### Migrations for the database:
 1. run < npx prisma db pull >
