@@ -30,7 +30,7 @@ model Inventories {
 
 model Maps {
   id        String     @id @default(uuid()) @db.Uuid
-  source    String
+  source    String     @unique
   createdAt DateTime   @default(now()) @db.Timestamp(6)
   updatedAt DateTime   @default(now()) @db.Timestamp(6)
   Sessions  Sessions[]
@@ -39,7 +39,7 @@ model Maps {
 model Resources {
   id          String        @id @default(uuid()) @db.Uuid
   name        String        @db.VarChar(255)
-  type        Int           @db.SmallInt
+  type        Int           @unique @db.SmallInt
   createdAt   DateTime      @default(now()) @db.Timestamp(6)
   updatedAt   DateTime      @default(now()) @db.Timestamp(6)
   Inventories Inventories[]
