@@ -3,16 +3,22 @@ import { sessionServiceFactory } from "../services/session.service.js";
 const sessionService = sessionServiceFactory();
 import { sendResponse } from '../handlers/response.js';
 import { StatusCodes } from 'http-status-codes';
+import { logger } from '../handlers/logger.js';
+
 
 export class SessionController {
+    constructor() {
+        this.createSession = logger(this.createSession.bind(this));
+        this.addUserOnSession = logger(this.addUserOnSession.bind(this));
+    }
+
     async createSession(req, res) {
         try {
             const token = generateSessionToken(req.user.id);
             const { mapId } = req.body;
             const session = await sessionService.createSession(token, mapId);
             await sessionService.createUserSession(req.user.id, session.id, true);
-            //токен возвращать в параметре дата cледующей функции?
-            return sendResponse(res, StatusCodes.OK, "Session created");
+            return sendResponse(res, StatusCodes.OK, "Session created", token);
         } catch (error) {
             return res.status(500).json(error);
         }
@@ -22,11 +28,11 @@ export class SessionController {
         try {
             const { token } = req.query;
             const session = await sessionService.checkSession(token);
-            // if (!session) {
-            //     return sendResponse(res, StatusCodes.BAD_REQUEST);
-            // }
+            if (!session) {
+                return sendResponse(res, StatusCodes.NOT_FOUND, "Session not found");
+            }
             await sessionService.createUserSession(req.user.id, session.id, false);
-            return sendResponse(res, StatusCodes.OK, "User added on session");
+            return sendResponse(res, StatusCodes.OK, "User added on session", true);
         } catch (error) {
             console.log(error);
             return res.status(500).json(error);
