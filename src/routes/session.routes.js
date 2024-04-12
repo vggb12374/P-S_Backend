@@ -4,6 +4,6 @@ import { SessionController } from '../controllers/session.controller.js';
 const sessionController = new SessionController();
 
 sessionRouter.post('/sessions', sessionController.createSession);
-sessionRouter.get('/sessions', sessionController.addUserOnSession);
+sessionRouter.patch('/sessions', sessionController.addUserOnSession);
 
 export { sessionRouter };
