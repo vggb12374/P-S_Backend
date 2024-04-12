@@ -21,7 +21,7 @@ export class UserController {
         }
         const hashedPassword = cryptoService.hashPassword(password);
         await userService.createUser(login, hashedPassword);
-        return sendResponse(res, StatusCodes.OK, "Registration successful");
+        return sendResponse(res, StatusCodes.OK, "Registration successful", true);
 
         // if (await userService.getUserByLogin(login)) {
         //     return sendResponse(res, StatusCodes.FORBIDDEN, "User " + login + " already exist!");
