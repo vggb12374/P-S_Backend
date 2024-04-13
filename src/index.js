@@ -13,6 +13,7 @@ const app = express();
 const api = "/api";
 
 app.use(cors());
+app.use(express.static('src/static'));
 app.use(express.json());
 
 app.use(api + '/auth', authRouter);

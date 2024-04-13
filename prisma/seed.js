@@ -3,11 +3,11 @@ const prisma = new PrismaClient();
 
 await prisma.maps.upsert({
     where: {
-        source: "src/static/maps/map_128.png",
+        source: "/maps/map_128.png",
     },
     update: {},
     create: {
-        source: "src/static/maps/map_128.png",
+        source: "/maps/map_128.png",
     },
 });
 
