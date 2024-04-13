@@ -32,6 +32,7 @@ class SessionService {
             },
             select: {
                 id: true,
+                mapId: true,
             },
         });
         return session;
