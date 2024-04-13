@@ -32,7 +32,7 @@ export class SessionController {
                 return sendResponse(res, StatusCodes.NOT_FOUND, "Session not found");
             }
             await sessionService.createUserSession(req.user.id, session.id, false);
-            return sendResponse(res, StatusCodes.OK, "User added on session", true);
+            return sendResponse(res, StatusCodes.OK, "User added on session", session);
         } catch (error) {
             console.log(error);
             return res.status(500).json(error);
