@@ -37,6 +37,21 @@ class SessionService {
         });
         return session;
     }
+
+    async chechUserSession(userId, sessionId) {
+        const userSession = await prisma.usersSessions.findUnique({
+            where: {
+                userId_sessionId: {
+                    userId: userId,
+                    sessionId: sessionId,
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+        return userSession;
+    }
 };
 
 export function sessionServiceFactory() {
