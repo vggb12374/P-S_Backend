@@ -85,4 +85,6 @@ model UsersSessions {
   Inventories      Inventories[]
   Users            Users              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "UsersSessions_fk1")
   Sessions         Sessions           @relation(fields: [sessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "UsersSessions_fk2")
+
+  @@unique([userId, sessionId], map: "UsersSessions_userId_sessionId")
 }
