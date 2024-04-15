@@ -10,5 +10,5 @@
 7. run < npm run dev > for development
 
 ### Migrations for the database:
-1. run < npx prisma db pull >
+1. run < npx prisma db pull > OR change file prisma/schema.prisma manually
 2. run < npx prisma migrate dev --name migration_name >
