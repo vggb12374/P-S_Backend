@@ -17,7 +17,7 @@ export class InventoryController {
             const { resourceId } = req.body;
             const userId = req.user.id;
             const sessionId = req.session.id;
-            const userSession = await sessionService.chechUserSession(userId, sessionId);
+            const userSession = await sessionService.checkUserSession(userId, sessionId);
             const inventory = await inventoryService.addResToInventory(resourceId, userSession.id);
             return sendResponse(res, StatusCodes.OK, "Resource added to inventory", inventory);
         } catch (error) {
@@ -30,7 +30,7 @@ export class InventoryController {
         try {
             const userId = req.user.id;
             const sessionId = req.session.id;
-            const userSession = await sessionService.chechUserSession(userId, sessionId);
+            const userSession = await sessionService.checkUserSession(userId, sessionId);
             const userInventory = await inventoryService.getUserInventory(userSession.id);
             return sendResponse(res, StatusCodes.OK, "Get user inventory successfully", userInventory);
         } catch (error) {

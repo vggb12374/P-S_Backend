@@ -30,7 +30,7 @@ export class SessionController {
             if (!session) {
                 return sendResponse(res, StatusCodes.NOT_FOUND, "Session not found");
             }
-            const userSession = await sessionService.chechUserSession(req.user.id, session.id);
+            const userSession = await sessionService.checkUserSession(req.user.id, session.id);
             if (userSession) {
                 return sendResponse(res, StatusCodes.OK, "User already on session", session);
             }

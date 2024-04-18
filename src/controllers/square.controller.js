@@ -18,7 +18,7 @@ export class SquareController {
             const sessionId = req.session.id;
             const userId = req.user.id;
             const square = await squareService.checkSquare(x, y, sessionId);
-            const userSession = await sessionService.chechUserSession(userId, sessionId);
+            const userSession = await sessionService.checkUserSession(userId, sessionId);
             let availableSquare = await squareService.createAvailableSquare(square.id, userSession.id, isCurrentPosition);
             availableSquare.Squares = square;
             return sendResponse(res, StatusCodes.OK, null, availableSquare);
@@ -32,7 +32,7 @@ export class SquareController {
         try {
             const userId = req.user.id;
             const sessionId = req.session.id;
-            const userSession = await sessionService.chechUserSession(userId, sessionId);
+            const userSession = await sessionService.checkUserSession(userId, sessionId);
             const availableSquares = await squareService.getAvailableSquares(userSession.id);
             return sendResponse(res, StatusCodes.OK, "Get available squares successfully", availableSquares);
         } catch (error) {

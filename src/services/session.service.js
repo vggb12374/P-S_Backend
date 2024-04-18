@@ -38,7 +38,7 @@ class SessionService {
         return session;
     }
 
-    async chechUserSession(userId, sessionId) {
+    async checkUserSession(userId, sessionId) {
         const userSession = await prisma.usersSessions.findUnique({
             where: {
                 userId_sessionId: {
