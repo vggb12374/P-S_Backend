@@ -11,6 +11,8 @@ export class Events {
     static SPAWN_PICKAXE = 9;
     static SPAWN_SHOVEL = 10;
 
+    static FOREST_EVENTS_RATE = 4;
+
     /**
      * Get sorted (asc) list of events for FOREST squares.
      * @returns 

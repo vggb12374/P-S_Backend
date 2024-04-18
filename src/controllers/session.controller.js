@@ -1,9 +1,15 @@
 import { generateSessionToken } from "../services/token.service.js";
 import { sessionServiceFactory } from "../services/session.service.js";
-const sessionService = sessionServiceFactory();
 import { sendResponse } from '../handlers/response.js';
 import { StatusCodes } from 'http-status-codes';
 import { logger } from '../handlers/logger.js';
+import { eventServiceFactory } from "../services/event.service.js";
+import { mapServiceFactory } from "../services/map.service.js";
+import { MapSquares } from "../constants/map-squares.constants.js";
+
+const sessionService = sessionServiceFactory();
+const eventService = eventServiceFactory();
+const mapService = mapServiceFactory();
 
 export class SessionController {
     constructor() {
@@ -15,8 +21,15 @@ export class SessionController {
         try {
             const token = generateSessionToken(req.user.id);
             const { mapId } = req.body;
+            
+            const map = await mapService.getMapById(mapId);
+            if (!map) {
+                return sendResponse(res, StatusCodes.BAD_REQUEST, "This map does not valid");
+            }
+
             const session = await sessionService.createSession(token, mapId);
             await sessionService.createUserSession(req.user.id, session.id, true);
+            await eventService.initializeSessionEvents(map.source, session.id);
             return sendResponse(res, StatusCodes.OK, "Session created", token);
         } catch (error) {
             return res.status(500).json(error);

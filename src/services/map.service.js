@@ -19,6 +19,10 @@ class MapService {
         });
         return maps;
     }
+
+    async getMapById(id) {
+        return prisma.maps.findFirst({ where: { id } });
+    }
 };
 
 export function mapServiceFactory() {

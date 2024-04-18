@@ -9,7 +9,7 @@ const writeLogData = (data) => {
     fs.appendFileSync(resolve("src/logs"), data + "\n");
 }
 
-const writeErrorData = (data) => {
+export const writeErrorData = (data) => {
     console.error(data);
     fs.appendFileSync(resolve("src/logs"), data);
 }

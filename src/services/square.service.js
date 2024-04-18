@@ -2,6 +2,10 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class SquareService {
+    async createSquare(x, y, sessionId, event) {
+        return prisma.squares.create({ data: { x, y, sessionId, event }});
+    }
+
     async checkSquare(x, y, sessionId) {
         const square = await prisma.squares.upsert({
             where: {
