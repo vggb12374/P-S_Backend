@@ -1,4 +1,5 @@
 import { SquareSchemas } from "../schemas/square.schemas.js";
+
 const squareSchemas = new SquareSchemas();
 
 class SquareValidService {

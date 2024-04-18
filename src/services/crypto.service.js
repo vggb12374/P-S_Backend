@@ -2,13 +2,11 @@ import bcrypt from 'bcryptjs';
 
 class CryptoService {
     hashPassword(password) {
-        const hashedPassword = bcrypt.hashSync(password, 7);
-        return hashedPassword;
+        return bcrypt.hashSync(password, 7);
     }
 
     validPassword(password, hashedPassword) {
-        const validatedPassword = bcrypt.compareSync(password, hashedPassword);
-        return validatedPassword;
+        return bcrypt.compareSync(password, hashedPassword);
     }
 };
 

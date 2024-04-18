@@ -1,4 +1,5 @@
 import { UserSchemas } from "../schemas/user.schemas.js";
+
 const userSchemas = new UserSchemas();
 
 class ValidationService {

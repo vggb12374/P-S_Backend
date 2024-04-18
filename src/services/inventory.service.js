@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 class InventoryService {
     async addResToInventory(resourceId, userSessionId) {
-        const inventory = await prisma.inventories.upsert({
+        return await prisma.inventories.upsert({
             where: {
                 resourceId_userSessionId: {
                     resourceId: resourceId,
@@ -26,11 +27,10 @@ class InventoryService {
                 amount: true,
             },
         });
-        return inventory;
     }
 
     async getUserInventory(userSessionId) {
-        const userInventory = await prisma.inventories.findMany({
+        return await prisma.inventories.findMany({
             where: {
                 userSessionId: userSessionId,
             },
@@ -41,7 +41,6 @@ class InventoryService {
                 amount: true,
             },
         });
-        return userInventory;
     }
 };
 

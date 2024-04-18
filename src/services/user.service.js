@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 class UserService {
     async getUserByLogin(login, id, selectLogin, password) {
-        const user = await prisma.users.findUnique({
+        return await prisma.users.findUnique({
             where: {
                 login: login,
             },
@@ -13,7 +14,6 @@ class UserService {
                 password: password,
             },
         });
-        return user;
     }
 
     async createUser(login, password) {
@@ -26,7 +26,7 @@ class UserService {
     }
     
     async getUserById(id, login, password, createdAt, updatedAt) {
-        const user = await prisma.users.findUnique({
+        return await prisma.users.findUnique({
             where: {
                 id: id,
             },
@@ -37,7 +37,6 @@ class UserService {
                 updatedAt: updatedAt,
             },
         });
-        return user;
     }
 
     async updateUser(id, login, password) {

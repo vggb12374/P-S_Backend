@@ -1,8 +1,9 @@
 import Router from 'express';
-const inventoryRouter = new Router();
 import { InventoryValidMiddleware } from '../middleware/inventory-valid.middleware.js';
-const inventoryValidMiddleware = new InventoryValidMiddleware();
 import { InventoryController } from '../controllers/inventory.controller.js';
+
+const inventoryRouter = new Router();
+const inventoryValidMiddleware = new InventoryValidMiddleware();
 const inventoryController = new InventoryController();
 
 inventoryRouter.post('/inventories', inventoryValidMiddleware.createValidMiddleware, inventoryController.addResToInventory);

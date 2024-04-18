@@ -1,8 +1,9 @@
 import Router from 'express';
-const authRouter = new Router();
 import { UserController } from '../controllers/user.controller.js';
-const userController = new UserController();
 import { ValidationMiddleware } from '../middleware/validation.middleware.js';
+
+const authRouter = new Router();
+const userController = new UserController();
 const validationMiddleware = new ValidationMiddleware();
 
 authRouter.post('/register', validationMiddleware.authValidMiddleware, userController.register);

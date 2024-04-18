@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 class SquareService {
@@ -7,7 +8,7 @@ class SquareService {
     }
 
     async checkSquare(x, y, sessionId) {
-        const square = await prisma.squares.upsert({
+        return await prisma.squares.upsert({
             where: {
                 x_y_sessionId: {
                     x: x,
@@ -29,11 +30,10 @@ class SquareService {
                 event: true,
             },
         });
-        return square;
     }
 
     async createAvailableSquare(squareId, userSessionId, isCurrentPosition) {
-        const availableSquare = await prisma.availableSquares.create({
+        return await prisma.availableSquares.create({
             data: {
                 squareId: squareId,
                 userSessionId: userSessionId,
@@ -46,11 +46,10 @@ class SquareService {
                 isCurrentPosition: true,
             },
         });
-        return availableSquare;
     }
     
     async getAvailableSquares(userSessionId) {
-        const availableSquares = await prisma.availableSquares.findMany({
+        return await prisma.availableSquares.findMany({
             where: {
                 userSessionId: userSessionId,
             },
@@ -69,7 +68,6 @@ class SquareService {
                 },
             },
         });
-        return availableSquares;
     }
 };
 

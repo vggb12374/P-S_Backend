@@ -1,4 +1,5 @@
 import { InventorySchemas } from "../schemas/inventory.schemas.js";
+
 const inventorySchemas = new InventorySchemas();
 
 class InventoryValidService {

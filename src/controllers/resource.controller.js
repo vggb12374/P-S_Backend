@@ -1,8 +1,9 @@
 import { logger } from '../handlers/logger.js';
 import { resourceServiceFactory } from "../services/resource.service.js";
-const resourceService = resourceServiceFactory();
 import { sendResponse } from "../handlers/response.js";
 import { StatusCodes } from "http-status-codes";
+
+const resourceService = resourceServiceFactory();
 
 export class ResourceController {
     constructor() {

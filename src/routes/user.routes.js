@@ -1,8 +1,9 @@
 import Router from 'express';
-const userRouter = new Router();
 import { UserController } from '../controllers/user.controller.js';
-const userController = new UserController();
 import { ValidationMiddleware } from '../middleware/validation.middleware.js';
+
+const userRouter = new Router();
+const userController = new UserController();
 const validationMiddleware = new ValidationMiddleware();
 
 userRouter.get('/user/:id', userController.getUserInfo);

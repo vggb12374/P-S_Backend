@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 class SessionService {
     async createSession(token, mapId) {
-        const session = await prisma.sessions.create({
+        return await prisma.sessions.create({
             data: {
                 token: token,
                 mapId: mapId,
@@ -12,7 +13,6 @@ class SessionService {
                 id: true,
             },
         });
-        return session;
     }
 
     async createUserSession(userId, sessionId, isAdmin) {
@@ -26,7 +26,7 @@ class SessionService {
     }
 
     async checkSession(token, id, mapId) {
-        const session = await prisma.sessions.findUnique({
+        return await prisma.sessions.findUnique({
             where: {
                 token: token,
             },
@@ -35,11 +35,10 @@ class SessionService {
                 mapId: mapId,
             },
         });
-        return session;
     }
 
     async checkUserSession(userId, sessionId) {
-        const userSession = await prisma.usersSessions.findUnique({
+        return await prisma.usersSessions.findUnique({
             where: {
                 userId_sessionId: {
                     userId: userId,
@@ -50,7 +49,6 @@ class SessionService {
                 id: true,
             },
         });
-        return userSession;
     }
 };
 

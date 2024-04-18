@@ -19,8 +19,8 @@ export class SessionController {
 
     async createSession(req, res) {
         try {
-            const token = generateSessionToken(req.user.id);
             const { mapId } = req.body;
+            const token = generateSessionToken(req.user.id);
             
             const map = await mapService.getMapById(mapId);
             if (!map) {
@@ -39,14 +39,16 @@ export class SessionController {
     async addUserOnSession(req, res) {
         try {
             const { token } = req.body;
+
             const session = await sessionService.checkSession(token, true, true);
             if (!session) {
                 return sendResponse(res, StatusCodes.NOT_FOUND, "Session not found");
             }
-            const userSession = await sessionService.checkUserSession(req.user.id, session.id);
-            if (userSession) {
+
+            if (await sessionService.checkUserSession(req.user.id, session.id)) {
                 return sendResponse(res, StatusCodes.OK, "User already on session", session);
             }
+            
             await sessionService.createUserSession(req.user.id, session.id, false);
             return sendResponse(res, StatusCodes.OK, "User added on session", session);
         } catch (error) {

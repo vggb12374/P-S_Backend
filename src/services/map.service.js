@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 class MapService {
@@ -11,13 +12,12 @@ class MapService {
     }
 
     async getMaps() {
-        const maps = await prisma.maps.findMany({
+        return await prisma.maps.findMany({
             select: {
                 id: true,
                 source: true,
             },
         });
-        return maps;
     }
 
     async getMapById(id) {

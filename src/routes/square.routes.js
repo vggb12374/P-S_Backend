@@ -1,8 +1,9 @@
 import Router from 'express';
-const squareRouter = new Router();
 import { SquareValidMiddleware } from '../middleware/square-valid.middleware.js';
-const squareValidMiddleware = new SquareValidMiddleware();
 import { SquareController } from '../controllers/square.controller.js';
+
+const squareRouter = new Router();
+const squareValidMiddleware = new SquareValidMiddleware();
 const squareController = new SquareController();
 
 squareRouter.post('/squares', squareValidMiddleware.createValidMiddleware, squareController.createAvailableSquare);

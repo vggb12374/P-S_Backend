@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import express from 'express';
 import cors from "cors";
 import { authRouter } from './routes/auth.routes.js';
@@ -12,8 +11,11 @@ import { sessionMiddleware } from './middleware/session.middleware.js';
 import { inventoryRouter } from './routes/inventory.routes.js';
 import { squareRouter } from './routes/square.routes.js';
 
+dotenv.config();
 const PORT = process.env.PORT;
+
 const app = express();
+
 const api = "/api";
 const sessions = "/sessions";
 
