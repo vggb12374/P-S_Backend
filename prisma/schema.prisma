@@ -8,13 +8,16 @@ datasource db {
 }
 
 model AvailableSquares {
-  id            String        @id @default(uuid()) @db.Uuid
-  squareId      String        @db.Uuid
-  userSessionId String        @db.Uuid
-  createdAt     DateTime      @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime      @default(now()) @db.Timestamp(6)
-  Squares       Squares       @relation(fields: [squareId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk1")
-  UsersSessions UsersSessions @relation(fields: [userSessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk2")
+  id                String        @id @default(uuid()) @db.Uuid
+  squareId          String        @db.Uuid
+  userSessionId     String        @db.Uuid
+  createdAt         DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt         DateTime      @default(now()) @db.Timestamp(6)
+  isCurrentPosition Boolean
+  Squares           Squares       @relation(fields: [squareId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk1")
+  UsersSessions     UsersSessions @relation(fields: [userSessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk2")
+
+  @@unique([squareId, userSessionId], map: "AvailableSquares_squareId_userSessionId")
 }
 
 model Inventories {
@@ -26,6 +29,8 @@ model Inventories {
   updatedAt     DateTime      @default(now()) @db.Timestamp(6)
   Resources     Resources     @relation(fields: [resourceId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Inventories_fk1")
   UsersSessions UsersSessions @relation(fields: [userSessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Inventories_fk2")
+
+  @@unique([resourceId, userSessionId], map: "Inventories_resourceId_userSessionId")
 }
 
 model Maps {
@@ -52,6 +57,7 @@ model Sessions {
   createdAt     DateTime        @default(now()) @db.Timestamp(6)
   updatedAt     DateTime        @default(now()) @db.Timestamp(6)
   Maps          Maps            @relation(fields: [mapId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Sessions_fk2")
+  Squares       Squares[]
   UsersSessions UsersSessions[]
 }
 
@@ -62,7 +68,11 @@ model Squares {
   event            Int?               @db.SmallInt
   createdAt        DateTime           @default(now()) @db.Timestamp(6)
   updatedAt        DateTime           @default(now()) @db.Timestamp(6)
+  sessionId        String             @db.Uuid
   AvailableSquares AvailableSquares[]
+  Sessions         Sessions           @relation(fields: [sessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Squares_fk1")
+
+  @@unique([x, y, sessionId], map: "Squares_x_y_sessionId")
 }
 
 model Users {
