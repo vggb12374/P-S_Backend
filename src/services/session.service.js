@@ -25,14 +25,14 @@ class SessionService {
         });
     }
 
-    async checkSession(token) {
+    async checkSession(token, id, mapId) {
         const session = await prisma.sessions.findUnique({
             where: {
                 token: token,
             },
             select: {
-                id: true,
-                mapId: true,
+                id: id,
+                mapId: mapId,
             },
         });
         return session;

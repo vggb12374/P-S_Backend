@@ -26,7 +26,7 @@ export class SessionController {
     async addUserOnSession(req, res) {
         try {
             const { token } = req.body;
-            const session = await sessionService.checkSession(token);
+            const session = await sessionService.checkSession(token, true, true);
             if (!session) {
                 return sendResponse(res, StatusCodes.NOT_FOUND, "Session not found");
             }
