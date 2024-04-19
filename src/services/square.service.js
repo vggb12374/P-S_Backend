@@ -16,7 +16,7 @@ class SquareService {
                     sessionId: sessionId,
                 },
             },
-            update: { event: null },
+            update: {},
             create: {
                 x: x,
                 y: y,
