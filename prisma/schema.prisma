@@ -14,7 +14,7 @@ model AvailableSquares {
   createdAt         DateTime      @default(now()) @db.Timestamp(6)
   updatedAt         DateTime      @default(now()) @db.Timestamp(6)
   isCurrentPosition Boolean
-  Squares           Squares       @relation(fields: [squareId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk1")
+  square            Squares       @relation(fields: [squareId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk1")
   UsersSessions     UsersSessions @relation(fields: [userSessionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AvailableSquares_fk2")
 
   @@unique([squareId, userSessionId], map: "AvailableSquares_squareId_userSessionId")

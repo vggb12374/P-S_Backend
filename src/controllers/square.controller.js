@@ -20,7 +20,7 @@ export class SquareController {
             const square = await squareService.checkSquare(x, y, req.session.id);
             const userSession = await sessionService.checkUserSession(req.user.id, req.session.id);
             let availableSquare = await squareService.createAvailableSquare(square.id, userSession.id, isCurrentPosition);
-            availableSquare.Squares = square;
+            availableSquare.square = square;
             return sendResponse(res, StatusCodes.OK, null, availableSquare);
         } catch (error) {
             console.log(error);

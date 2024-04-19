@@ -58,7 +58,7 @@ class SquareService {
                 squareId: true,
                 userSessionId: true,
                 isCurrentPosition: true,
-                Squares: {
+                square: {
                     select: {
                         id: true,
                         x: true,
