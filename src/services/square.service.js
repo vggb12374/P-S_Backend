@@ -8,7 +8,7 @@ class SquareService {
     }
 
     async checkSquare(x, y, sessionId) {
-        return await prisma.squares.upsert({
+        return prisma.squares.upsert({
             where: {
                 x_y_sessionId: {
                     x: x,
@@ -33,8 +33,10 @@ class SquareService {
     }
 
     async createAvailableSquare(squareId, userSessionId, isCurrentPosition) {
-        return await prisma.availableSquares.create({
-            data: {
+        return prisma.availableSquares.upsert({
+            update: { isCurrentPosition },
+            where: { squareId_userSessionId: { squareId, userSessionId } },
+            create: {
                 squareId: squareId,
                 userSessionId: userSessionId,
                 isCurrentPosition: isCurrentPosition,
@@ -49,7 +51,7 @@ class SquareService {
     }
     
     async getAvailableSquares(userSessionId) {
-        return await prisma.availableSquares.findMany({
+        return prisma.availableSquares.findMany({
             where: {
                 userSessionId: userSessionId,
             },
