@@ -69,6 +69,15 @@ class SquareService {
             },
         });
     }
+
+    async resetAllCurrentPosition(userSessionId) {
+        return await prisma.availableSquares.updateMany({
+            data: {
+                isCurrentPosition: false
+            },
+            where: { userSessionId }
+        });
+      }
 };
 
 export function squareServiceFactory() {
