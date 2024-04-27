@@ -77,7 +77,7 @@ class SquareService {
             data: {
                 isCurrentPosition: false
             },
-            where: { userSessionId }
+            where: { userSessionId, isCurrentPosition: true }
         });
       }
 };
