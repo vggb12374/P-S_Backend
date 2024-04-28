@@ -45,12 +45,19 @@ export class SessionController {
                 return sendResponse(res, StatusCodes.NOT_FOUND, "Session not found");
             }
 
-            if (await sessionService.checkUserSession(req.user.id, session.id)) {
-                return sendResponse(res, StatusCodes.OK, "User already on session", session);
+            const userSession = await sessionService.checkUserSession(req.user.id, session.id);
+            if (userSession) {
+                return sendResponse(res, StatusCodes.OK, "User already on session", {
+                    ...session,
+                    userSessionId: userSession.id,
+                });
             }
             
-            await sessionService.createUserSession(req.user.id, session.id, false);
-            return sendResponse(res, StatusCodes.OK, "User added on session", session);
+            const newUserSession = await sessionService.createUserSession(req.user.id, session.id, false);
+            return sendResponse(res, StatusCodes.OK, "User added on session", {
+                ...session,
+                userSessionId: newUserSession?.id,
+            });
         } catch (error) {
             return res.status(500).json(error);
         }
