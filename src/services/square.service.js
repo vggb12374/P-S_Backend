@@ -79,7 +79,29 @@ class SquareService {
             },
             where: { userSessionId, isCurrentPosition: true }
         });
-      }
+    }
+
+    async getUserPositions() {
+        return await prisma.availableSquares.findMany({
+            where: {
+                isCurrentPosition: true,
+            },
+            select: {
+                id: true,
+                squareId: true,
+                userSessionId: true,
+                isCurrentPosition: true,
+                square: {
+                    select: {
+                        id: true,
+                        x: true,
+                        y: true,
+                        event: true,
+                    },
+                },
+            },
+        });
+    }
 };
 
 export function squareServiceFactory() {

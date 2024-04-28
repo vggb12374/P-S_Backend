@@ -8,5 +8,6 @@ const squareController = new SquareController();
 
 squareRouter.post('/squares', squareValidMiddleware.createValidMiddleware, squareController.createAvailableSquare);
 squareRouter.get('/squares', squareController.getAvailableSquares);
+squareRouter.get('/squares/positions', squareController.getUserPositions);
 
 export { squareRouter };

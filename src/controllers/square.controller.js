@@ -50,4 +50,14 @@ export class SquareController {
             return res.status(500).json(error);
         }
     }
+
+    async getUserPositions(req, res) {
+        try {
+            const userPositions = await squareService.getUserPositions();
+            return sendResponse(res, StatusCodes.OK, "Get user positions successfully", userPositions);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+        }
+    }
 };
