@@ -10,21 +10,20 @@ import { sessionRouter } from './routes/session.routes.js';
 import { sessionMiddleware } from './middleware/session.middleware.js';
 import { inventoryRouter } from './routes/inventory.routes.js';
 import { squareRouter } from './routes/square.routes.js';
-// import socketIo from 'socket.io';
-// import http from 'http';
 import { Server } from 'http';
 import { Server as SocketServer } from 'socket.io';
-import { resolve } from "path";
 
 dotenv.config();
 const PORT = process.env.PORT;
 
 const app = express();
 
-// const server = http.createServer(app);
-// const io = socketIo(server);
 const http = new Server(app);
-const io = new SocketServer(http);
+const io = new SocketServer(http, {
+    cors: {
+        origin: '*',
+    }
+});
 
 const api = "/api";
 const sessions = "/sessions";
@@ -43,14 +42,10 @@ app.use(api + sessions, sessionMiddleware);
 app.use(api + sessions, inventoryRouter);
 app.use(api + sessions, squareRouter);
 
-app.listen(PORT, () => console.log(`server started on port ${PORT}`));
-
 io.on('connection', (socket) => {
     console.log('a user connected');
 });
 
-app.get('/socket.io', (req, res) => {
-    res.sendFile(resolve('./node_modules/socket.io/client-dist/socket.io.js'));
-});
+http.listen(PORT, () => console.log(`server started on port ${PORT}`));
 
 export { io };
