@@ -3,6 +3,7 @@ import { sessionServiceFactory } from "../services/session.service.js";
 import { squareServiceFactory } from "../services/square.service.js";
 import { sendResponse } from '../handlers/response.js';
 import { StatusCodes } from 'http-status-codes';
+import { io } from '../index.js'
 
 const sessionService = sessionServiceFactory();
 const squareService = squareServiceFactory();
@@ -19,6 +20,7 @@ export class SquareController {
             
             const square = await squareService.checkSquare(x, y, req.session.id);
             const userSession = await sessionService.checkUserSession(req.user.id, req.session.id);
+            const userSessionId = userSession.id;
 
             if (isCurrentPosition) {
                 await squareService.resetAllCurrentPosition(userSession.id);
@@ -26,6 +28,11 @@ export class SquareController {
 
             const availableSquare = await squareService.createAvailableSquare(square.id, userSession.id, isCurrentPosition);
             availableSquare.square = square;
+
+            if (isCurrentPosition) {
+                io.emit('user position message', { x, y, userSessionId });
+            }
+
             return sendResponse(res, StatusCodes.OK, null, availableSquare);
         } catch (error) {
             console.log(error);

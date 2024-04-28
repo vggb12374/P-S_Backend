@@ -10,11 +10,26 @@ import { sessionRouter } from './routes/session.routes.js';
 import { sessionMiddleware } from './middleware/session.middleware.js';
 import { inventoryRouter } from './routes/inventory.routes.js';
 import { squareRouter } from './routes/square.routes.js';
+// import socketIo from 'socket.io';
+// import http from 'http';
+import { Server } from 'http';
+import { Server as SocketServer } from 'socket.io';
 
 dotenv.config();
 const PORT = process.env.PORT;
 
 const app = express();
+
+// const server = http.createServer(app);
+// const io = socketIo(server);
+const http = new Server(app);
+const io = new SocketServer(http);
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+});
+
+export { io };
 
 const api = "/api";
 const sessions = "/sessions";
