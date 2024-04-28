@@ -30,7 +30,7 @@ export class SquareController {
             availableSquare.square = square;
 
             if (isCurrentPosition) {
-                io.emit('user position message', { x, y, userSessionId });
+                io.emit('USER_POSITION_MESSAGE', { x, y, userSessionId });
             }
 
             return sendResponse(res, StatusCodes.OK, null, availableSquare);
