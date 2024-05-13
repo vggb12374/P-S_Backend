@@ -49,3 +49,5 @@ io.on('connection', (socket) => {
 http.listen(PORT, () => console.log(`server started on port ${PORT}`));
 
 export { io };
+export { app };
+export { http };
