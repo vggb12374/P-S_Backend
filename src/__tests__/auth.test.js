@@ -1,8 +1,9 @@
-import { afterAll, describe, expect, jest, test } from '@jest/globals';
+import { afterAll, describe, expect, test } from '@jest/globals';
 import supertest from 'supertest';
 import { app } from '../index.js';
 import { http } from '../index.js';
 import { userServiceFactory } from '../services/user.service.js';
+import info from './mock/register-mock.json';
 
 const userService = userServiceFactory();
 
@@ -91,9 +92,27 @@ describe('auth routes test', () => {
         });
     });
 
+    describe('mock register', () => {
+        test('successfull mock register', () => {
+            info.forEach(async (element) => {
+                const { body, statusCode } = await supertest(app).post('/api/auth/register').send(element);
+                expect(statusCode).toBe(200);
+                expect(body.message).toBe('Registration successfull');
+            });
+        });
+    });
+
     afterAll(async () => {
         let login = "newuser";
         let user = await userService.getUserByLogin(login, true, false, false);
+        await userService.deleteUser(user.id);
+
+        login = "mockuser1";
+        user = await userService.getUserByLogin(login, true, false, false);
+        await userService.deleteUser(user.id);
+
+        login = "mockuser2";
+        user = await userService.getUserByLogin(login, true, false, false);
         await userService.deleteUser(user.id);
 
         http.close();
